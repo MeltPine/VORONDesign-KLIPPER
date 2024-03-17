@@ -14,7 +14,7 @@ Das Projekt wird von einer aktiven Community unterstützt, die stetig zur Weiter
 
 *** Klipper Firmware**: Läuft sowohl auf dem Raspberry Pi als auch auf der Drucker-MCU. Der Pi übernimmt dabei die anspruchsvollen Berechnungen und kommuniziert einfache Befehle an die MCU.
 *** Moonraker**: Eine speziell für Klipper entwickelte API, die auf dem Raspberry Pi läuft und die Verbindung zwischen der Firmware und Web-basierten Frontends wie MainsailOS oder Fluidd herstellt.
-*** Web-Frontends**: MainsailOS und Fluidd sind Webinterfaces, die auf Moonraker aufbauen und eine einfache Steuerung des Druckers, Anpassungen von Einstellungen und Überwachung des Druckprozesses ermöglichen.
+*** Web-Frontends**: MainsailOS schrieb oder Fluidd sind Webinterfaces, die auf Moonraker aufbauen und eine einfache Steuerung des Druckers, Anpassungen von Einstellungen und Überwachung des Druckprozesses ermöglichen.
 
 ### Installation und Setup
 
