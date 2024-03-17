@@ -1,0 +1,33 @@
+###KLIPPER###
+
+ist eine 3D-Drucker-Firmware, die von Kevin O'Connor entwickelt wurde. Sie zielt darauf ab, die Rechenleistung eines Mikrocontrollers (MCU) mit der eines leistungsfähigeren Computers, wie einem Raspberry Pi oder BigTreeTech CB1, zu kombinieren. 
+Diese innovative Architektur ermöglicht es Klipper, höhere Druckgeschwindigkeiten und Präzision zu erreichen, als es mit traditionellen Firmware-Lösungen möglich wäre. 
+Klipper arbeitet eng mit zusätzlichen Softwarekomponenten zusammen, wie Moonraker, einer API für Klipper, und Webinterfaces wie MainsailOS oder Fluidd, um eine benutzerfreundliche Erfahrung zu schaffen.
+
+### Entwickler und Philosophie
+
+Kevin O'Connor, der Entwickler hinter Klipper, strebte danach, eine flexible und effiziente Lösung für die Gemeinschaft der 3D-Druck-Enthusiasten zu schaffen. 
+Die Philosophie von Klipper basiert auf Offenheit, Erweiterbarkeit und der Möglichkeit, das Maximum aus der "vorhandenen" 3D-Drucker-Hardware herauszuholen! 
+Das Projekt wird von einer aktiven Community unterstützt, die stetig zur Weiterentwicklung der Firmware beiträgt.
+
+### Kernkomponenten und Funktionsweise
+
+*** Klipper Firmware**: Läuft sowohl auf dem Raspberry Pi als auch auf der Drucker-MCU. Der Pi übernimmt dabei die anspruchsvollen Berechnungen und kommuniziert einfache Befehle an die MCU.
+*** Moonraker**: Eine speziell für Klipper entwickelte API, die auf dem Raspberry Pi läuft und die Verbindung zwischen der Firmware und Web-basierten Frontends wie MainsailOS oder Fluidd herstellt.
+*** Web-Frontends**: MainsailOS und Fluidd sind Webinterfaces, die auf Moonraker aufbauen und eine einfache Steuerung des Druckers, Anpassungen von Einstellungen und Überwachung des Druckprozesses ermöglichen.
+
+### Installation und Setup
+
+Das Setup von Klipper beinhaltet die Installation der Firmware auf dem Raspberry Pi und der entsprechenden MCU des 3D-Druckers, gefolgt von der Einrichtung von Moonraker und dem gewählten Webinterface. 
+Benutzer konfigurieren ihren Drucker über eine zentrale Konfigurationsdatei (`printer.cfg`), die alle notwendigen Einstellungen enthält.
+
+### Vorteile
+
+Die Nutzung der Rechenleistung des Raspberry Pi erlaubt es Klipper, außergewöhnliche Druckgeschwindigkeiten und Präzision zu erreichen. 
+Die Firmware unterstützt eine breite Palette von Drucker-Hardware und ermöglicht aus ihrer "alten" so wie "neuen" Hardware das beste herauszuholen, 
+die die Benutzerfreundlichkeit und Effizienz erheblich steigern.
+
+Zusammenfassend bietet Klipper, zusammen mit Moonraker und einem Webinterface wie MainsailOS oder Fluidd, eine kraftvolle Kombination aus Geschwindigkeit, Flexibilität und Benutzerfreundlichkeit, die es den Benutzern ermöglicht, 
+ihre 3D-Druckerfahrung zu verbessern und zu optimieren. Das Projekt profitiert von einer lebendigen Community und der Arbeit von Kevin O'Connor, die Klipper zu einer herausragenden Wahl in der Welt der 3D-Drucker-Firmware macht.
+
+###written_by_MeltPine###
