@@ -1,1 +1,603 @@
+# Diese Datei enthält gemeinsame Pin-Zuweisungen für das BigTreeTech Octopus V1 Board.
+# Um diese Konfiguration zu verwenden, sollte die Firmware für den STM32F446 mit einem "32KiB Bootloader" kompiliert werden
+# Aktiviere "extra low-level configuration options" und wähle den "12MHz Kristall" als Taktreferenz
 
+# Nach dem Ausführen von "make", kopiere die generierte "klipper/out/klipper.bin" Datei
+# in eine Datei namens "firmware.bin" auf einer SD-Karte und starte dann das OctoPus mit dieser SD-Karte neu.
+
+# Siehe docs/Config_Reference.md für eine Beschreibung der Parameter.
+
+## Voron Design VORON2 250/300/350mm BigTreeTech OctoPus V1 TMC2209 UART Konfiguration
+
+## *** DINGE ZU ÄNDERN/ÜBERPRÜFEN: ***
+## MCU Pfade                            [mcu] Abschnitt
+## Thermistor-Typen                     [extruder] und [heater_bed] Abschnitte - Siehe https://www.klipper3d.org/Config_Reference.html#common-thermistors für gängige Thermistortypen
+## Heizpatronen-Pin des Hotends         [extruder] Abschnitt
+## Position des Z-Endschalters          [safe_z_home] Abschnitt
+## Homing-Endposition                   [gcode_macro G32] Abschnitt
+## Offset des Z-Endschalters für Z0     [stepper_z] Abschnitt
+## Aktivierungspin des Z1 Steppers      [stepper_z1] Abschnitt
+## Messpunkte für die Sonde             [quad_gantry_level] Abschnitt
+## Min & Max Ecken des Portals          [quad_gantry_level] Abschnitt
+## PID-Abstimmung                       [extruder] und [heater_bed] Abschnitte
+## Sonde Pin                            [probe] Abschnitt
+## E-Schritte feinjustieren             [extruder] Abschnitt
+
+[mcu]
+##  Definition durch "ls -l /dev/serial/by-id/" erhalten, dann abziehen, um zu verifizieren
+##--------------------------------------------------------------------
+serial: /dev/serial/by-id/{ERSETZE MIT DEINER SERIENNUMMER}
+restart_method: command
+##--------------------------------------------------------------------
+
+[printer]
+kinematik: corexy
+max_velocity: 300  
+max_accel: 3000             #Max 4000
+max_z_velocity: 15          #Max 15 für 12V TMC Treiber, kann für 24V erhöht werden
+max_z_accel: 350
+square_corner_velocity: 5.0
+
+#####################################################################
+#   X/Y Stepper-Einstellungen
+#####################################################################
+
+##  B Stepper - Links
+##  Verbunden mit MOTOR_0
+##  Endstop verbunden mit DIAG_0
+[stepper_x]
+step_pin: PF13
+dir_pin: !PF12
+enable_pin: !PF14
+rotation_distance: 40
+microsteps: 32
+full_steps_per_rotation:200  #auf 400 setzen für 0,9 Grad Stepper
+endstop_pin: PG6
+position_min: 0
+##--------------------------------------------------------------------
+
+##  Auskommentieren für 250mm Bau
+#position_endstop: 250
+#position_max: 250
+
+##  Auskommentieren für 300mm Bau
+#position_endstop: 300
+#position_max: 300
+
+##  Auskommentieren für 350mm Bau
+#position_endstop: 350
+#position_max: 350
+
+##--------------------------------------------------------------------
+homing_speed: 25   #Max 100
+homing_retract_dist: 5
+homing_positive_dir: true
+
+##  Stelle sicher, dass du unten für deinen relevanten Treiber aktualisierst (2208 oder 2209)
+[tmc2209 stepper_x]
+uart_pin: PC4
+interpolate: false
+run_current: 0.8
+sense_resistor: 0.110
+stealthchop_threshold: 0
+
+##  A Stepper - Rechts
+##  Verbunden mit MOTOR_1
+##  Endstop verbunden mit DIAG_1
+[stepper_y]
+step_pin: PG0
+
+
+dir_pin: !PG1
+enable_pin: !PF15
+rotation_distance: 40
+microsteps: 32
+full_steps_per_rotation:200  #auf 400 setzen für 0,9 Grad Stepper
+endstop_pin: PG9
+position_min: 0
+##--------------------------------------------------------------------
+
+##  Auskommentieren für 250mm Bau
+#position_endstop: 250
+#position_max: 250
+
+##  Auskommentieren für 300mm Bau
+#position_endstop: 300
+#position_max: 300
+
+##  Auskommentieren für 350mm Bau
+#position_endstop: 350
+#position_max: 350
+
+##--------------------------------------------------------------------
+homing_speed: 25  #Max 100
+homing_retract_dist: 5
+homing_positive_dir: true
+
+##  Stelle sicher, dass du unten für deinen relevanten Treiber aktualisierst (2208 oder 2209)
+[tmc2209 stepper_y]
+uart_pin: PD11
+interpolate: false
+run_current: 0.8
+sense_resistor: 0.110
+stealthchop_threshold: 0
+
+#####################################################################
+#   Z Stepper-Einstellungen
+#####################################################################
+
+## Z0 Stepper - Vorne Links
+##  Verbunden mit MOTOR_2
+##  Endstop verbunden mit DIAG_2
+[stepper_z]
+step_pin: PF11
+dir_pin: !PG3
+enable_pin: !PG5
+rotation_distance: 40
+gear_ratio: 80:16
+microsteps: 32
+endstop_pin: PG10
+##  Z-Position der Düse (in mm) zum Z-Endschalter-Auslösepunkt relativ zur Druckoberfläche (Z0)
+##  (+) Wert = Endschalter oberhalb von Z0, (-) Wert = Endschalter unterhalb
+##  Erhöhung von position_endstop bringt die Düse näher an das Bett
+##  Nachdem du Z_ENDSTOP_CALIBRATE ausgeführt hast, wird position_endstop ganz am Ende deiner Konfiguration gespeichert
+position_endstop: -0.5
+##--------------------------------------------------------------------
+
+##  Auskommentieren für 250mm Bau
+#position_max: 210
+
+##  Auskommentieren für 300mm Bau
+#position_max: 260
+
+##  Auskommentieren für 350mm Bau
+#position_max: 310
+
+##--------------------------------------------------------------------
+position_min: -5
+homing_speed: 8
+second_homing_speed: 3
+homing_retract_dist: 3
+
+##  Stelle sicher, dass du unten für deinen relevanten Treiber aktualisierst (2208 oder 2209)
+[tmc2209 stepper_z]
+uart_pin: PC6
+interpolate: false
+run_current: 0.8
+sense_resistor: 0.110
+stealthchop_threshold: 0
+
+##  Z1 Stepper - Hinten Links
+##  Verbunden mit MOTOR_3
+[stepper_z1]
+step_pin: PG4
+dir_pin: PC1
+## Octopus 1.0 & 1.1.  Octopus PRO 1.0
+#enable_pin: !PA0
+## Octopus PRO 1.1
+#enable_pin: !PA2
+rotation_distance: 40
+gear_ratio: 80:16
+microsteps: 32
+
+##  Stelle sicher, dass du unten für deinen relevanten Treiber aktualisierst (2208 oder 2209)
+[tmc2209 stepper_z1]
+uart_pin: PC7
+interpolate: false
+run_current: 0.8
+sense_resistor: 0.110
+stealthchop_threshold: 0
+
+##  Z2 Stepper - Hinten Rechts
+##  Verbunden mit MOTOR_4
+[stepper_z2]
+step_pin: PF9
+dir_pin: !PF10
+enable_pin: !PG2
+rotation_distance: 40
+gear_ratio: 80:16
+microsteps: 32
+
+##  Stelle sicher, dass du unten für deinen relevanten Treiber aktualisierst (2208 oder 2209)
+[tmc2209 stepper_z2]
+uart_pin: PF2
+interpolate: false
+run_current: 0.8
+sense_resistor: 0.110
+stealthchop_threshold: 0
+
+##  Z3 Stepper - Vorne Rechts
+##  Verbunden mit MOTOR_5
+[stepper_z3]
+step_pin: PC13
+dir_pin: PF0
+enable_pin: !PF1
+rotation_distance: 40
+gear_ratio: 80:16
+microsteps: 32
+
+##  Stelle sicher, dass du unten
+
+ für deinen relevanten Treiber aktualisierst (2208 oder 2209)
+[tmc2209 stepper_z3]
+uart_pin: PE4
+interpolate: false
+run_current: 0.8
+sense_resistor: 0.110
+stealthchop_threshold: 0
+
+
+#####################################################################
+#   Extruder
+#####################################################################
+
+##  Verbunden mit MOTOR_6
+##  Heizer - HE0
+##  Thermistor - T0
+[extruder]
+step_pin: PE2
+dir_pin: PE3
+enable_pin: !PD4
+##  Wert unten aktualisieren, wenn du die Extruderkalibrierung durchführst
+##  Wenn du um 100mm Filament bittest, aber in Wirklichkeit sind es 98mm:
+##  rotation_distance = <vorherige_rotation_distance> * <tatsächliche_extrudierte_distanz> / 100
+##  22.6789511 ist ein guter Startpunkt
+rotation_distance: 22.6789511   #Bondtech 5mm Antriebszahnräder
+##  Zahnradverhältnis je nach Extrudertyp aktualisieren
+##  50:10 für Stealthburner/Clockwork 2 verwenden
+##  50:17 für Afterburner/Clockwork (BMG-Zahnradverhältnis) verwenden
+##  80:20 für M4, M3.1 verwenden
+gear_ratio: 50:10
+microsteps: 32
+full_steps_per_rotation: 200    #200 für 1,8 Grad, 400 für 0,9 Grad
+düsendurchmesser: 0.400
+filamentdurchmesser: 1.75
+## Octopus 1.0 & 1.1.  Octopus PRO 1.0
+#heater_pin: PA2
+## Octopus PRO 1.1
+#heater_pin: PA0
+## Überprüfe, welchen Thermistortyp du hast. Siehe https://www.klipper3d.org/Config_Reference.html#common-thermistors für gängige Thermistortypen.
+## "Generic 3950" für NTC 100k 3950 Thermistoren verwenden
+#sensor_type:
+sensor_pin: PF4
+min_temp: 10
+max_temp: 270
+max_power: 1.0
+min_extrude_temp: 170
+steuerung = pid
+pid_kp = 26.213
+pid_ki = 1.304
+pid_kd = 131.721
+##	Versuche, pressure_advance unter 1.0 zu halten
+#pressure_advance: 0.05
+##	Standard ist 0.040, unverändert lassen
+#pressure_advance_smooth_time: 0.040
+
+##	E0 auf MOTOR6
+##	Stelle sicher, dass du unten für deinen relevanten Treiber aktualisierst (2208 oder 2209)
+[tmc2209 extruder]
+uart_pin: PE1
+interpolate: false
+run_current: 0.5
+sense_resistor: 0.110
+stealthchop_threshold: 0
+
+
+#####################################################################
+#   Heizbett
+#####################################################################
+
+##	SSR-Pin - HE1
+##	Thermistor - TB
+[heater_bed]
+##	Auskommentieren der folgenden Zeile, wenn die Standard-SSR-Verdrahtung aus den Dokumentationsseiten verwendet wird
+#heater_pin: PA3
+##	Andere Verdrahtungsanleitungen verwenden möglicherweise BED_OUT, um das SSR zu steuern. Für diese Fälle die folgende Zeile auskommentieren
+#heater_pin: PA1
+##	Überprüfe, welchen Thermistortyp du hast. Siehe https://www.klipper3d.org/Config_Reference.html#common-thermistors für gängige Thermistortypen.
+##	"Generic 3950" für NTC 100k 3950 Thermistoren verwenden
+#sensor_type:
+sensor_pin: PF3
+##	max_power so einstellen, dass es die SSR-Bewertung nicht überschreitet. Das Omron G3NA-210B-DC5 SSR ist ohne Kühlkörper mit 4 Ampere bewertet.
+##	Die Formel lautet "4 / (Wattzahl_des_Heizbetts / Netzspannung) = max_power"
+##	Wenn max_power größer als 1.0 ist, 1.0 verwenden
+max_power: 0.6
+min_temp: 0
+max_temp: 120
+steuerung:
+
+ pid
+pid_kp: 58.437
+pid_ki: 2.347
+pid_kd: 363.769
+
+#####################################################################
+#   Sonde
+#####################################################################
+
+##	Induktive Sonde
+##	Diese Sonde wird nicht für die Z-Höhe verwendet, nur für Quad Gantry Leveling
+[probe]
+
+#--------------------------------------------------------------------
+
+##	Sonde Port nach Typ auswählen:
+##	Für den PROBE-Port. Funktioniert nicht mit Diode. Möglicherweise wird ein Pull-up-Widerstand von Signal zu 24V benötigt.
+#pin: ~!PB7
+##	Für den DIAG_7-Port. BRAUCHT BAT85 DIODE! Zu !PG15 ändern, wenn Sonde NO ist.
+#pin: PG15
+##	Für Octopus Pro PROBE-Port; NPN- und PNP-Näherungsschaltertypen können durch Jumper eingestellt werden
+#pin: ~!PC5
+
+#--------------------------------------------------------------------
+
+x_offset: 0
+y_offset: 25.0
+z_offset: 0
+geschwindigkeit: 10.0
+proben: 3
+proben_ergebnis: median
+proben_rückzugsdistanz: 3.0
+proben_tolerance: 0.006
+proben_tolerance_wiederholungen: 3
+
+#####################################################################
+#   Lüftersteuerung
+#####################################################################
+
+##	Druckkühllüfter - FAN0
+[fan]
+pin: PA8
+kick_start_zeit: 0.5
+##	Abhängig von deinem Lüfter musst du diesen Wert möglicherweise erhöhen
+##	wenn dein Lüfter nicht startet. Kann cycle_time ändern (erhöhen)
+##	wenn dein Lüfter nicht effektiv langsamer werden kann
+off_unterhalb: 0.10
+
+##	Hotend-Lüfter - FAN1
+[heater_fan hotend_fan]
+pin: PE5
+max_leistung: 1.0
+kick_start_zeit: 0.5
+heizer: extruder
+heizer_temp: 50.0
+##	Wenn du Rückfluss erlebst, kannst du fan_speed reduzieren
+#fan_speed: 1.0
+
+##	Steuerungslüfter - FAN2
+[controller_fan controller_fan]
+pin: PD12
+kick_start_zeit: 0.5
+heizer: heater_bed
+
+##	Abluftlüfter - FAN3
+#[heater_fan exhaust_fan]
+#pin: PD13
+#max_leistung: 1.0
+#shutdown_geschwindigkeit: 0.0
+#kick_start_zeit: 5.0
+#heizer: heater_bed
+#heizer_temp: 60
+#fan_speed: 1.0
+
+#####################################################################
+#   LED-Steuerung
+#####################################################################
+
+## Kammbeleuchtung - HE2-Anschluss (Optional)
+#[output_pin caselight]
+##Octopus 1.0 & 1.1, Octopus PRO 1.0
+#pin: PB10
+##Octopus PRO 1.1
+#pin: PB0
+#pwm:true
+#shutdown_wert: 0
+#wert:1
+#cycle_zeit: 0.01
+
+#####################################################################
+#   Homing und Portalanpassungsroutinen
+#####################################################################
+
+[idle_timeout]
+timeout: 1800
+
+[safe_z_home]
+##	XY-Position des Z-Endschalters
+##	-10,-10 auf die XY-Koordinaten deines Endschaltpins aktualisieren 
+##	(zum Beispiel 157,305) nach Durchführung der Z-Endschaltpin
+##	Standortdefinition.
+home_xy_position:-10,-10
+geschwindigkeit:100
+z_hop:10
+
+
+##	QUAD_GANTRY_LEVEL verwenden, um ein Portal zu nivellieren.
+##	Min. & Max. Portal-Ecken - messen vom Düsen bei MIN (0,0) und 
+##	MAX (250, 250), (300,300), oder (350,350) abhängig von deiner Druckergröße
+##	zu entsprechenden Riemenpositionen
+[quad_gantry_level]
+
+#--------------------------------------------------------------------
+##	Portal-Ecken für 250mm Bau
+##	Auskommentieren für 250mm Bau
+#gantry_corners:
+#	-60,-10
+#	310, 320
+##	Messpunkte
+#points:
+#	50,25
+#	50,175
+#	200,175
+#	200,25
+    
+##	Portal-Ecken für 
+
+300mm Bau
+##	Auskommentieren für 300mm Bau
+#gantry_corners:
+#	-60,-10
+#	360,370
+##	Messpunkte
+#points:
+#	50,25
+#	50,225
+#	250,225
+#	250,25
+
+##	Portal-Ecken für 350mm Bau
+##	Auskommentieren für 350mm Bau
+#gantry_corners:
+#	-60,-10
+#	410,420
+##	Messpunkte
+#points:
+#	50,25
+#	50,275
+#	300,275
+#	300,25
+
+#--------------------------------------------------------------------
+geschwindigkeit: 100
+horizontal_move_z: 10
+wiederholungen: 5
+retry_tolerance: 0.0075
+max_anpassung: 10
+
+########################################
+# EXP1 / EXP2 (Display) Pins
+########################################
+
+[board_pins]
+aliases:
+    # EXP1-Header
+    EXP1_1=PE8, EXP1_2=PE7,
+    EXP1_3=PE9, EXP1_4=PE10,
+    EXP1_5=PE12, EXP1_6=PE13,    # Steckplatz auf dieser Seite
+    EXP1_7=PE14, EXP1_8=PE15,
+    EXP1_9=<GND>, EXP1_10=<5V>,
+
+    # EXP2-Header
+    EXP2_1=PA6, EXP2_2=PA5,
+    EXP2_3=PB1, EXP2_4=PA4,
+    EXP2_5=PB2, EXP2_6=PA7,      # Steckplatz auf dieser Seite
+    EXP2_7=PC15, EXP2_8=<RST>,
+    EXP2_9=<GND>, EXP2_10=<5V>
+
+#####################################################################
+#   Displays
+#####################################################################
+
+## 	Das Display auskommentieren, das du hast
+#--------------------------------------------------------------------
+
+##	RepRapDiscount 128x64 Full Graphic Smart Controller
+#[display]
+#lcd_type: st7920
+#cs_pin: EXP1_4
+#sclk_pin: EXP1_5
+#sid_pin: EXP1_3
+#menu_timeout: 40
+#encoder_pins: ^EXP2_5, ^EXP2_3
+#click_pin: ^!EXP1_2
+
+#[output_pin beeper]
+#pin: EXP1_1
+
+#--------------------------------------------------------------------
+
+##	mini12864 LCD-Display
+#[display]
+#lcd_type: uc1701
+#cs_pin: EXP1_3
+#a0_pin: EXP1_4
+#rst_pin: EXP1_5
+#encoder_pins: ^EXP2_5, ^EXP2_3
+#click_pin: ^!EXP1_2
+#kontrast: 63
+#spi_software_miso_pin: EXP2_1
+#spi_software_mosi_pin: EXP2_6
+#spi_software_sclk_pin: EXP2_2
+
+##	Zur Steuerung von Neopixel RGB im mini12864-Display
+#[neopixel btt_mini12864]
+#pin: EXP1_6
+#kettenglieder: 3
+#anfängliches_ROT: 0.1
+#anfängliches_GRÜN: 0.5
+#anfängliches_BLAU: 0.0
+#farbreihenfolge: RGB
+
+##	RGB-Werte beim Start für jedes Neopixel festlegen. 
+##	Index 1 = Display, Index 2 und 3 = Knopf
+[delayed_gcode setdisplayneopixel]
+anfängliche_dauer: 1
+gcode:
+       SET_LED LED=btt_mini12864 ROT=1 GRÜN=1 BLAU=1 INDEX=1 TRANSMIT=0
+       SET_LED LED=btt_mini12864 ROT=1 GRÜN=0 BLAU=0 INDEX=2 TRANSMIT=0
+       SET_LED LED=btt_mini12864 ROT=1 GRÜN=0 BLAU=0 INDEX=3 
+
+#--------------------------------------------------------------------
+
+
+#####################################################################
+# 	Makros
+#####################################################################
+[gcode_macro PARK]
+gcode:
+    {% set th = printer.toolhead %}
+    G0 X{th.axis_maximum.x//2} Y{th.axis_maximum.y//2} Z30  
+
+[gcode_macro G32]
+gcode:
+    SAVE_GCODE_STATE NAME=STATE_G32
+    G90
+    G28
+    QUAD_GANTRY_LEVEL
+    G28
+    PARK
+    RESTORE_GCODE_STATE NAME=STATE_G32
+   
+[gcode_macro PRINT_START]
+#   Verwende PRINT_START für das Startskri
+
+pt des Slicers - bitte für deinen bevorzugten Slicer anpassen
+gcode:
+    G32                            ; alle Achsen homen
+    G90                            ; absolute Positionierung
+    G1 Z20 F3000                   ; Düse vom Bett wegbewegen
+   
+
+[gcode_macro PRINT_END]
+#   Verwende PRINT_END für das Endskript des Slicers - bitte für deinen bevorzugten Slicer anpassen
+gcode:
+    # sichere Anti-Stringing-Bewegungskoordinaten
+    {% set th = printer.toolhead %}
+    {% set x_safe = th.position.x + 20 * (1 if th.axis_maximum.x - th.position.x > 20 else -1) %}
+    {% set y_safe = th.position.y + 20 * (1 if th.axis_maximum.y - th.position.y > 20 else -1) %}
+    {% set z_safe = [th.position.z + 2, th.axis_maximum.z]|min %}
+    
+    SAVE_GCODE_STATE NAME=STATE_PRINT_END
+
+    M400                           ; warten, bis der Puffer geleert ist
+    G92 E0                         ; Extruder auf Null setzen
+    G1 E-5.0 F1800                 ; Filament zurückziehen
+    
+    HEIZUNGEN AUSSCHALTEN
+
+    G90                                      ; absolute Positionierung
+    G0 X{x_safe} Y{y_safe} Z{z_safe} F20000  ; Düse bewegen, um Stringing zu entfernen
+    G0 X{th.axis_maximum.x//2} Y{th.axis_maximum.y - 2} F3600  ; Düse hinten parken
+    M107                                     ; Lüfter ausschalten
+    
+    BETTMESH LÖSCHEN
+
+    # Der Zweck des SAVE_GCODE_STATE/RESTORE_GCODE_STATE
+    # Befehlspaars ist es, das Koordinatensystem des Druckers
+    # und die Geschwindigkeitseinstellungen wiederherzustellen, da die obigen Befehle sie ändern.
+    # Um jedoch unbeabsichtigte, unbeabsichtigte Werkzeugkopfbewegungen zu verhindern,
+    # beim Wiederherstellen des Zustands, setze explizit MOVE=0.
+    RESTORE_GCODE_STATE NAME=STATE_PRINT_END MOVE=0
+```
+
+Diese kommentierte und übersetzte Konfigurationsdatei dient dazu, die Einrichtung und Anpassung deines BigTreeTech Octopus V1 Boards mit Klipper für ein Voron 2 Design zu vereinfachen und zu erklären.
