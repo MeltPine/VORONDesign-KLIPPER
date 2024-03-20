@@ -107,7 +107,7 @@ Siehe https://github.com/VoronDesign/Voron-0/releases/tag/V0.0
 
 Der obige Link beinhaltet die Stealthburner-Toolhead-Dateien, die mit mehreren Druckern der Voron-Reihe kompatibel sind. Um alles übersichtlich zu halten, werden die Dateien des StealthBurners separat verwaltet. Das Stealthburner-Repository kann eingesehen werden, indem du [HIER](https://github.com/VoronDesign/Voron-Stealthburner) klickst.
 
-![Bild des Voron Trident](/Drawings_DXFs/images/voron_trident_SB.png)
+[Bild des Voron Trident](/Drawings_DXFs/images/voron_trident_SB.png)
 
 Die offizielle Veröffentlichung des Voron Trident 3D-Druckers. Die Stückliste (Bill of Materials) findest du im Konfigurator auf der [Voron Design](http://vorondesign.com/voron_trident) Webseite. Die empfohlenen Größen für diesen Drucker sind 250x250x250, 300x300x250 und 350x350x250.
 
